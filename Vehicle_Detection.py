@@ -3,6 +3,11 @@
 
 # # Vehicle Detection and Tracking
 
+# In[ ]:
+
+
+
+
 # **Vehicle Detection Project**
 # 
 # The goals / steps of this project are the following:
@@ -179,11 +184,12 @@ print('end')
 
 # **Explore Hog on vehicle images and non-vehicle images ** 
 
-# In[9]:
+# In[22]:
 
 # Display Hog on a vehicle image and non-vehicle images
 index = random.randint(0, len(vehicles))
 v_img = mpimg.imread(vehicles[index]) #matplotlib read on scale from 0-->1
+
 nv_img = mpimg.imread(non_vehicles[index])
 
 orient = 9
@@ -557,16 +563,16 @@ print('end')
 # 
 # The find_cars only has to extract hog features once and then can be sub-sampled to get all of its overlaying windows. Each window is defined by a scaling factor where a scale of 1 would result in a window that's 8 x 8 cells then the overlap of each window is in terms of the cell distance. This means that a cells_per_step = 2 would result in a search window overlap of 75%. Its possible to run this same function multiple times for different scale values to generate multiple-scaled search windows.
 
-# In[35]:
+# In[107]:
 
 # Define a single function that can extract features using hog sub-sampling and make predictions
-def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=False):
+def find_cars(img,xstart,xstop, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=False):
     count = 0
     t=time.time()
     draw_img = np.copy(img)
     img = img.astype(np.float32)/255
-    
-    img_tosearch = img[ystart:ystop,:,:] # cut of the image only the region of interest
+   
+    img_tosearch = img[ystart:ystop,xstart:xstop, :] # cut of the image only the region of interest
     ctrans_tosearch = convert_color(img_tosearch, conv='RGB2YCrCb')
     if scale != 1:
         imshape = ctrans_tosearch.shape
@@ -577,16 +583,16 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
     ch3 = ctrans_tosearch[:,:,2]
 
    # Define blocks and steps as above
-    nxblocks = (ch1.shape[1] // pix_per_cell) - cell_per_block + 1
-    nyblocks = (ch1.shape[0] // pix_per_cell) - cell_per_block + 1 
+    nxblocks = (ch1.shape[1] // pix_per_cell) +  1
+    nyblocks = (ch1.shape[0] // pix_per_cell) +  1 
     nfeat_per_block = orient*cell_per_block**2
     
     # 64 was the orginal sampling rate, with 8 cells and 8 pix per cell
     window = 64
-    nblocks_per_window = (window // pix_per_cell) - cell_per_block + 1
+    nblocks_per_window = (window // pix_per_cell) -  1
     cells_per_step = 4 # Instead of overlap, define how many cells to step
-    nxsteps = (nxblocks - nblocks_per_window) // cells_per_step + 1
-    nysteps = (nyblocks - nblocks_per_window) // cells_per_step + 1
+    nxsteps = (nxblocks - nblocks_per_window) // cells_per_step 
+    nysteps = (nyblocks - nblocks_per_window) // cells_per_step 
     
     # Compute individual channel HOG features for the entire image
     hog1 = get_hog_features(ch1, orient, pix_per_cell, cell_per_block, feature_vec=False)
@@ -630,8 +636,8 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
                 xbox_left = np.int(xleft*scale)
                 ytop_draw = np.int(ytop*scale)
                 win_draw = np.int(window*scale)
-                cv2.rectangle(draw_img,(xbox_left, ytop_draw+ystart),(xbox_left+win_draw,ytop_draw+win_draw+ystart),(0,0,255),6) 
-                rectangels.append(((xbox_left, ytop_draw+ystart),(xbox_left+win_draw,ytop_draw+win_draw+ystart)))
+                cv2.rectangle(draw_img,(xbox_left+xstart, ytop_draw+ystart),(xbox_left+win_draw+xstart,ytop_draw+win_draw+ystart),(0,0,255),6) 
+                rectangels.append(((xbox_left+xstart, ytop_draw+ystart),(xbox_left+win_draw+xstart,ytop_draw+win_draw+ystart)))
                 
    # print(time.time()-t, "sec to run find_cars(), total windows= ",count )           
     return draw_img, rectangels
@@ -642,7 +648,7 @@ print('end')
 # svc = pickle.load(open(filename, 'rb'))
 # print("loaded trained model")
 
-# In[20]:
+# In[104]:
 
 img1 = mpimg.imread('./test_images/test1.jpg')
 img2 = mpimg.imread('./test_images/test2.jpg')
@@ -654,6 +660,11 @@ img6 = mpimg.imread('./test_images/test6.jpg')
 
 
 
+
+
+
+xstart = 0
+xstop = 1380
 ystart = 400
 ystop = 656
 #xstart=0
@@ -669,12 +680,12 @@ hog_channel = 'ALL'
 spatial_size = (32, 32) # Spatial binning dimensions
 hist_bins = 32    # Number of histogram bins
     
-out_img1, bboxes1 = find_cars(img1, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
-out_img2, bboxes2 = find_cars(img2, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
-out_img3, bboxes3 = find_cars(img3, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
-out_img4, bboxes4 = find_cars(img4, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
-out_img5, bboxes5 = find_cars(img5, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
-out_img6, bboxes6 = find_cars(img6, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+out_img1, bboxes1 = find_cars(img1, xstart, xstop,ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+out_img2, bboxes2 = find_cars(img2, xstart, xstop,ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+out_img3, bboxes3 = find_cars(img3, xstart, xstop,ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+out_img4, bboxes4 = find_cars(img4, xstart, xstop,ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+out_img5, bboxes5 = find_cars(img5, xstart, xstop,ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+out_img6, bboxes6 = find_cars(img6, xstart, xstop,ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
 
 fig, axs = plt.subplots(2,3, figsize=(15, 5))
 fig.subplots_adjust(hspace = .2, wspace=.005)
@@ -700,20 +711,56 @@ axs[5].imshow(out_img6)
 axs[5].set_title('test6')
 
 
+# In[ ]:
+
+
+
+
 # ## Step5: Dealing with Multiple detections of the same object and false positives
 # Here, I will use the suggested method in the lessons to adjust the sliding windows sizes and region of interest in the image to combine duplicates and reject false positives
 
 # ### Testing sliding window and car detection on test images
 # In this section will play with parameters to get the best areas scan in the image for the sliding windows.
 
-# In[21]:
+# In[89]:
 
 # Showing the region of interest
 img = mpimg.imread('./test_images/test1.jpg')
-ystart = 400
-ystop = 656
+xstart = 400
+xstop = 1280
+ystart = 350
+ystop = 580
 #xstart=0
 #xstop=1280
+scale = 1.0
+colorspace = 'RGB' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+orient = 9
+pix_per_cell = 8
+cell_per_block = 2
+hog_channel = 'ALL'
+
+# Note:im  my find_cars() functions, I only used hog features and deactivated color features
+spatial_size = (32, 32) # Spatial binning dimensions
+hist_bins = 32    # Number of histogram bins
+    
+out_img, bboxes = find_cars(img,xstart, xstop, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=True)
+
+print(bboxes)
+#draw_img= draw_boxes(img, bboxes, color=(0, 0, 255), thick=6)
+# Iterate through the bounding boxes
+for bbox in bboxes:
+    # Draw a rectangle given bbox coordinates
+    cv2.rectangle(img, bbox[0], bbox[1], (0, 0, 255), 6)
+plt.imshow(img )
+
+
+# In[91]:
+
+# After experminting (Good parameters)
+img = mpimg.imread('./test_images/test5.jpg')
+
+ystart = 400
+ystop = 600
 scale = 1.5
 colorspace = 'RGB' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
 orient = 9
@@ -725,35 +772,7 @@ hog_channel = 'ALL'
 spatial_size = (32, 32) # Spatial binning dimensions
 hist_bins = 32    # Number of histogram bins
     
-out_img, bboxes = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=True)
-
-print(bboxes)
-#draw_img= draw_boxes(img, bboxes, color=(0, 0, 255), thick=6)
-# Iterate through the bounding boxes
-for bbox in bboxes:
-    # Draw a rectangle given bbox coordinates
-    cv2.rectangle(img, bbox[0], bbox[1], (0, 0, 255), 6)
-plt.imshow(img )
-
-
-# In[22]:
-
-# After experminting (Good parameters)
-img = mpimg.imread('./test_images/test5.jpg')
-ystart = 400
-ystop = 520
-scale = 1.8
-colorspace = 'RGB' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
-orient = 9
-pix_per_cell = 8
-cell_per_block = 2
-hog_channel = 'ALL'
-
-# Note:im  my find_cars() functions, I only used hog features and deactivated color features
-spatial_size = (32, 32) # Spatial binning dimensions
-hist_bins = 32    # Number of histogram bins
-    
-out_img1, bboxes1 = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins,  rect_display=True)
+out_img1, bboxes1 = find_cars(img,xstart,xstop, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins,  rect_display=True)
 
 print(bboxes1)
 #draw_img= draw_boxes(img, bboxes, color=(0, 0, 255), thick=6)
@@ -764,13 +783,13 @@ for bbox in bboxes1:
 plt.imshow(img )
 
 
-# In[23]:
+# In[35]:
 
 # After experminting (Good parameters)
 img = mpimg.imread('./test_images/test1.jpg')
 ystart = 400
-ystop = 464
-scale = 1.0
+ystop = 600
+scale = 1.5
 colorspace = 'RGB' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
 orient = 9
 pix_per_cell = 8
@@ -792,11 +811,11 @@ for bbox in bboxes2:
 plt.imshow(img )
 
 
-# In[24]:
+# In[92]:
 
 # After experminting (Good parameters)
 img = mpimg.imread('./test_images/test1.jpg')
-ystart = 480
+ystart = 420
 ystop = 656
 scale = 2.0
 colorspace = 'RGB' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
@@ -809,7 +828,7 @@ hog_channel = 'ALL'
 spatial_size = (32, 32) # Spatial binning dimensions
 hist_bins = 32    # Number of histogram bins
     
-out_img3, bboxes3 = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=True)
+out_img3, bboxes3 = find_cars(img, xstart,xstop,ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=True)
 
 print(bboxes3)
 #draw_img= draw_boxes(img, bboxes, color=(0, 0, 255), thick=6)
@@ -822,62 +841,40 @@ plt.imshow(img )
 
 # Now as shown on test images, the classifier some times detect duplicates or false positives
 
-# In[36]:
+# In[110]:
 
 # Modifed sliding windows function to vary the windows scale and image region
 def modified_sliding_window(image, svc, X_scaler, pix_per_cell, cell_per_block, spatial_size, hist_bins, rd=False):
+    xstart = 400
+    xstop = 1380
     bboxes = []
     ystart = 400
-    ystop = 520
-    scale = 1.8
-    
-    out_img, bboxes1 = find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
-    ystart = 400
-    ystop = 464
-    scale = 1.0
-    
-    out_img, bboxes2 = find_cars(out_img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
-    ystart = 480
-    ystop = 656
-    scale = 2.0
-   
-    out_img, bboxes3 = find_cars(out_img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
-    ystart = 432
-    ystop = 600
-    scale = 2.5
-   
-    out_img, bboxes4 = find_cars(out_img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
-    ystart = 420
-    ystop = 550
+    ystop = 565
     scale = 1.5
     
-    out_img, bboxes5 = find_cars(out_img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
-    ystart = 410
-    ystop = 480
+    out_img, bboxes1 = find_cars(image,xstart, xstop, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
+    ystart = 350
+    ystop = 500
     scale = 1.0
     
-    out_img, bboxes6 = find_cars(out_img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
-    ystart = 410
-    ystop = 580
-    scale = 1.8
-    
-    out_img, bboxes7 = find_cars(out_img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
-    
+    out_img, bboxes2 = find_cars(out_img,xstart, xstop, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
+   
+   
+    #out_img, bboxes4 = find_cars(out_img,xstart, xstop, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, rect_display=rd)
+   
     
    
     bboxes.extend(bboxes1)
     bboxes.extend(bboxes2)
-    bboxes.extend(bboxes3)
-    bboxes.extend(bboxes4)
-    bboxes.extend(bboxes5)  
-    bboxes.extend(bboxes6) 
-    bboxes.extend(bboxes7)  
+    
+
+  
     
 
     return out_img, bboxes
 
 
-# In[26]:
+# In[111]:
 
 #Draw scanning boxes 
 orient =9
@@ -893,7 +890,7 @@ for bbox in bboxes:
 plt.imshow(img )
 
 
-# In[27]:
+# In[97]:
 
 img1 = mpimg.imread('./test_images/test1.jpg')
 plt.imshow(img5)
@@ -940,7 +937,7 @@ axs[5].set_title('test6')
 
 
 
-# In[28]:
+# In[99]:
 
 def add_heat(heatmap, bbox_list):
     # Iterate through list of bboxes
@@ -956,7 +953,7 @@ print('end')
 
 # then the "hot" parts of the map are where the cars are, and by imposing a threshold, I can reject areas affected by false positives. (i.e. values under the threshold is considered cold otherwise it is hot). So let's write a function to threshold the map as well.
 
-# In[29]:
+# In[100]:
 
 def apply_threshold(heatmap, threshold):
     # Zero out pixels below the threshold
@@ -966,7 +963,7 @@ def apply_threshold(heatmap, threshold):
 print('end')
 
 
-# In[30]:
+# In[101]:
 
 def draw_labeled_bboxes(img, labels):
     # Iterate through all detected cars
@@ -986,7 +983,7 @@ def draw_labeled_bboxes(img, labels):
 
 # Test heat maps of  on a test images with sliding windows
 
-# In[31]:
+# In[48]:
 
 from scipy.ndimage.measurements import label
 test = [img1,img2,img3,img4,img5,img6]
@@ -1018,7 +1015,7 @@ for i in range(len(images)):
 
 # ### Drawing bounding boxes
 
-# In[32]:
+# In[49]:
 
 # Set up plot
 fig, axs = plt.subplots(3,2, figsize=(10, 20))
@@ -1032,13 +1029,13 @@ for i in range(len(draw_imgs)):
 
 # ## Step6: building a pipeline
 
-# In[37]:
+# In[105]:
 
 def pipeline(img):
     ystart = 400
     ystop = 656
     xstart=0
-    xstop=1280
+    xstop=1380
     scale = 1.5
     colorspace = 'YUV' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
     orient = 9
@@ -1049,7 +1046,7 @@ def pipeline(img):
     spatial_size = (32, 32) # Spatial binning dimensions
     hist_bins = 32    # Number of histogram bins
     
-    out_img, bboxes = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+    out_img, bboxes = find_cars(img,xstart,xstop, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
     
     heat = np.zeros_like(out_img[:,:,0]).astype(np.float)
     # Add heat to each box in box list
@@ -1069,7 +1066,7 @@ print('end')
 
 # ### Test the pipeline on test images
 
-# In[34]:
+# In[106]:
 
 test_images = glob.glob('./test_images/test*.jpg')
 # Set up plot
@@ -1095,7 +1092,7 @@ axs[5].axis('off')
 # ## Step 7: Testing on Videos
 # 1st will test on the small one (test_video.mp4), then the project video (project_video.mp4).
 
-# In[38]:
+# In[52]:
 
 # Import everything needed to edit/save/watch video clips
 import imageio
@@ -1106,7 +1103,7 @@ from IPython.display import HTML
 print('end')
 
 
-# In[39]:
+# In[108]:
 
 #history = deque(maxlen = 8)
 output = 'test_video_out.mp4'
@@ -1120,7 +1117,7 @@ output_clip = clip1.fl_image(pipeline) #NOTE: this function expects color images
 get_ipython().magic('time output_clip.write_videofile(output, audio=False)')
 
 
-# In[40]:
+# In[109]:
 
 # this piece of code is used to embed the video in the notebook
 HTML("""
@@ -1161,7 +1158,7 @@ HTML("""
 
 # ## Modified pipeline(using variable size sliding windows)
 
-# In[41]:
+# In[112]:
 
 def modified_pipeline(img):
     orient =9
@@ -1186,7 +1183,7 @@ def modified_pipeline(img):
 print('end')
 
 
-# In[42]:
+# In[113]:
 
 #history = deque(maxlen = 8)
 output = 'test_video_out.mp4'
@@ -1200,7 +1197,7 @@ output_clip = clip1.fl_image(modified_pipeline) #NOTE: this function expects col
 get_ipython().magic('time output_clip.write_videofile(output, audio=False)')
 
 
-# In[43]:
+# In[114]:
 
 # this piece of code is used to embed the video in the notebook
 HTML("""
@@ -1212,7 +1209,7 @@ HTML("""
 
 # ### Testing modified pipeline on project_video.mp4
 
-# In[ ]:
+# In[115]:
 
 output = 'project_video_out.mp4'
 ## To speed up the testing process you may want to try your pipeline on a shorter subclip of the video
