@@ -50,34 +50,64 @@ You're reading it!
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in the 6th, 9th and 10th In-cells in the  IPython notebook 'Vehicle_Detection.ipynb' (or in lines #185 through #267 of the file called `Vehicle_Detection.py`).  
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
 ![alt text][image1]
 
+
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `RGB` color space and HOG parameters of `orient = 9`, `pix_per_cell = 8`, `cell_per_block = 2`, `hog_channel = 2`:
 
 
 ![alt text][image2]
+![alt text][image3]
+![alt text][image4]
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I tried various combinations of parameters and the best I got is using :
+`YCrCb` color space and HOG parameters of `orient = 9`, `pix_per_cell = 8`, `cell_per_block = 2`, `hog_channel = 'ALL'`
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+I trained a linear SVM using using 80% of Data for training, and 20% for testing after normalizing and randomizing data, I only used the (vehicles)[https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/vehicles.zip] and (non-vehicles)[https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/non-vehicles.zip] datasets. I used Hog-features to train the classifier. I tried some experiments till at the end I used the best as a matter of testing accuracy. Here are the experiments I did: 
+| Experiment no.        		| Parameters      					| Testing accuracy                    | Time to train SVM|
+|:---------------------:|:--------------------------------------------------------------------------:| 
+| 1        		| Cspace='RGB', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.965  | 23.49sec |
+| 2          | Cspace='HLS', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.9834  | 21.96sec  |
+| 3            |Cspace='YUV', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.98  | 19.39sec    |
+| 4           |Cspace='YCrCb', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.979 | 16.49sec   	|
+
+The code for this step is contained in the 13th In-cells in the  IPython notebook 'Vehicle_Detection.ipynb' (or in lines #344 through #401 of the file called `Vehicle_Detection.py`).  
+
+I then final run was the one I chose to train the classifier, as will be discused in the sliding winsow section, experiments showed the using 'YCrCB' is the best for Hog-features extraction and best features I got for prediction.
 
 ### Sliding Window Search
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I decided In the begining to search in a region of interest and use a fixed size window, The code for this step is contained in the 18th In-cells in the  IPython notebook 'Vehicle_Detection.ipynb' (or in lines #568 through #644 of the file called `Vehicle_Detection.py`).  
+, so only a part of the image is used to scan with sliding windows to not waste time scanning all parts of the image, as shown below:
+used parameters:
 
-![alt text][image3]
+ystart = 400
+ystop = 656
+scale = 1.5
+colorspace =  YCrCb
+orient = 9
+pix_per_cell = 8
+cell_per_block = 2
+hog_channel = 'ALL'
+window= 64
+The code for this expetiment is contained in the 19th In-cells in the  IPython notebook 'Vehicle_Detection.ipynb' (or in lines #653 through #711 of the file called `Vehicle_Detection.py`).  
+![alt text][image5]
+
+Then I started testing on test images to see how fixed 
+
+
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
