@@ -27,7 +27,7 @@ The goals / steps of this project are the following:
 [image9]: ./output_images/sliding_window_size_RGB.png
 [image10]: ./output_images/sliding_window_size3_YUV.png
 [image11]: ./output_images/sliding_window_size3_YCrCb.png
-[image12]: ./output_images/sliding_windows_7.png
+[image12]: ./output_images/slidingwindows_7_regions_merged.png
 [image17]: ./output_images/best_sliding_window.png
 [image18]: ./output_images/pipeline.png
 
