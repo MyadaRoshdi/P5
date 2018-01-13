@@ -29,10 +29,14 @@ The goals / steps of this project are the following:
 [image11]: ./output_images/sliding_window_size3_YCrCb.png
 [image12]: ./output_images/sliding_windows_7.png
 [image17]: ./output_images/best_sliding_window.png
+[image18]: ./output_images/pipeline.png
 
 [image13]: ./output_images/heat_map_1.png
 [image14]: ./output_images/heat_map_2.png
 [image15]: ./output_images/heat_map_3.png
+[image19]: ./output_images/heat_map_3.png
+[image20]: ./output_images/heat_map_3.png
+[image21]: ./output_images/heat_map_3.png
 
 [image16]: ./output_images/bounding_boxes.png
 [video1]: ./project_video_out.mp4
@@ -125,18 +129,51 @@ Then I started testing the fixed sliding window algorithm on different color spa
 
 Then I chose the best which was 'YCrCb'.
 
-After, I started runing my so far Algorithm on the 6-test images, using fixed size sliding window, but the results had some false-positives as shown below:
+After, I started runing my so far Algorithm on the 6-test images, using fixed size sliding window, The result was very good as shown in the below image, but when I ran on the project Video,  bounding boxes sizes were not changing from frame to anothe in a nice way :
 
-![alt text][image5]
+![alt text][image17]
 
+So, I decided to go for multiple size window., as shown in the following images:
 
+![alt text][image6]
 
+![alt text][image7]
+
+![alt text][image8]
+
+![alt text][image12]
+
+Then, the best of my trials could be found in the modified_sliding_windows(), The code for it is contained in in lines #846 through #874 of the file called `Vehicle_Detection.py`.
+
+**NOTE:** In the code, you will notice I also trimmed the image from the left side, I didn this step to decrease the number of sliding windows, as my pipeline was taking almost 2-hrs to run. 
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+The code for the final pipeline is contained in in lines #1168 through #1163 of the file called `Vehicle_Detection.py`.
 
-![alt text][image4]
+Ultimately I searched on two scales using YCrCb 3-channel HOG featuresin the feature vector, Cut only the region of interest from the image(which made feature extraction and prediction faster) and decreasng # of sliding windows/frame, this part is done in th function call of modified_sliding_window() step.
+
+Then, From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions, The code for this part is done by calling the add_heat() and apply_threshold(). is contained in in lines #941 through #964 of the file called `Vehicle_Detection.py`..  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.
+
+### Here are six test images  and their corresponding heatmaps:
+
+![alt text][image13]
+
+![alt text][image14]
+
+![alt text][image15]
+
+![alt text][image19]
+
+![alt text][image20]
+
+![alt text][image21]
+
+### Here the resulting bounding boxes are drawn for the same heat maps detected above:
+
+![alt text][image16]
+
+
 ---
 
 ### Video Implementation
@@ -147,27 +184,22 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-### Here are six frames and their corresponding heatmaps:
-
-![alt text][image5]
-
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
-
-
+Look at step 2. in the above section.
 ---
 
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+The most challenging part in my project that in the 1st run, it took around 12 sec to run 1-frame, so for the project video (1261-frames), so it took more than 4-hrs to run pipeline on the frame using fixed size window. then I started to minimize the number of used sliding windows, by cuting only the region of interest out of the image, using multiple sizes windows, using only HOG-features for training the classifer and predicting later /frame. 
+
+My pipeline will likely fail if captured at night, weather conditions(rain, snow, fog, ...etc), Also the car tested on is on the left lane of the road, so it might fail if it is in the middle of in the right lane of the road.
+
+Suggested Improvements:
+1) Use date from last no of video frames for predicting current frame boxes
+2) Train the classifier with more data .
+3) As data used in training is already frames of video, so successive frames are almost similar, so may be a better randomization for data to make sure most of the images situations are found in both training and testing.
+4) If I have a faster GPU, I'd increase the # of windows used for scanning the region of interest in the image.
+5) Different classifier Could be experimented
+6) Adding some Computer vision techniques as pre-processing for the image (e.g. Camera Caliberation)
 
