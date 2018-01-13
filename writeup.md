@@ -76,7 +76,7 @@ Here is an example using the `RGB` color space and HOG parameters of `orient = 9
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
 I tried various combinations of parameters and the best I got is using :
-`YCrCb` color space and HOG parameters of `orient = 9`, `pix_per_cell = 8`, `cell_per_block = 2`, `hog_channel = 'ALL'`
+`YCrCb` color space and HOG parameters of `orient = 9`, `pix_per_cell = 8`, `cell_per_block = 2`, `hog_channel = 'ALL'`. This part will be described in details in the next section (3)
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
