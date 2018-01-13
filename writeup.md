@@ -27,7 +27,8 @@ The goals / steps of this project are the following:
 [image9]: ./output_images/sliding_window_size_RGB.png
 [image10]: ./output_images/sliding_window_size3_YUV.png
 [image11]: ./output_images/sliding_window_size3_YCrCb.png
-[image12]: ./output_images/sliding_windows_7.jpg
+[image12]: ./output_images/sliding_windows_7.png
+[image17]: ./output_images/best_sliding_window.png
 
 [image13]: ./output_images/heat_map_1.png
 [image14]: ./output_images/heat_map_2.png
@@ -110,10 +111,24 @@ pix_per_cell = 8
 cell_per_block = 2
 hog_channel = 'ALL'
 window= 64
-The code for this expetiment is contained in the 19th In-cells in the  IPython notebook 'Vehicle_Detection.ipynb' (or in lines #653 through #711 of the file called `Vehicle_Detection.py`).  
+The code for this expetiment is contained in the 19th In-cells in the  IPython notebook 'Vehicle_Detection.ipynb' (or in lines #653 through #711 of the file called `Vehicle_Detection.py`).
+
 ![alt text][image5]
 
-Then I started testing on test images to see how fixed 
+Then I started testing the fixed sliding window algorithm on different color spaces for HOG-features extraction to see the best to use, and here's what I got for RGB, YUV and YCrCb sliding windows results respectively:
+
+![alt text][image9]
+
+![alt text][image10]
+
+![alt text][image11]
+
+Then I chose the best which was 'YCrCb'.
+
+After, I started runing my so far Algorithm on the 6-test images, using fixed size sliding window, but the results had some false-positives as shown below:
+
+![alt text][image5]
+
 
 
 
