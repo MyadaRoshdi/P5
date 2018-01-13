@@ -33,7 +33,7 @@ The goals / steps of this project are the following:
 [image14]: ./output_images/heat_map_2.png
 [image15]: ./output_images/heat_map_3.png
 
-[image16]: ./output_images/bounding boxes.png
+[image16]: ./output_images/bounding_boxes.png
 [video1]: ./project_video_out.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
