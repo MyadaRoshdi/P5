@@ -34,9 +34,9 @@ The goals / steps of this project are the following:
 [image13]: ./output_images/heat_map_1.png
 [image14]: ./output_images/heat_map_2.png
 [image15]: ./output_images/heat_map_3.png
-[image19]: ./output_images/heat_map_3.png
-[image20]: ./output_images/heat_map_3.png
-[image21]: ./output_images/heat_map_3.png
+[image19]: ./output_images/heat_map_4.png
+[image20]: ./output_images/heat_map_5.png
+[image21]: ./output_images/heat_map_6.png
 
 [image16]: ./output_images/bounding_boxes.png
 [video1]: ./project_video_out.mp4
