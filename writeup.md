@@ -1,5 +1,5 @@
-## Writeup Template
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+## Writeup 
+
 
 ---
 
@@ -15,14 +15,26 @@ The goals / steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 [//]: # (Image References)
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
+[image1]: ./output_images/dataset_exploration.png
+[image2]: ./output_images/hog_exploration.png
+[image3]: ./output_images/hog_exploration_1.png
+[image4]: ./output_images/hog_exploration_2.png
+
+[image3]: ./output_images/region_of_interest.png
+[image3]: ./output_images/sliding_window_size1.png
+[image3]: ./output_images/sliding_window_size2.png
+[image3]: ./output_images/sliding_window_size3.png
+[image3]: ./output_images/sliding_window_size_RGB.png
+[image3]: ./output_images/sliding_window_size3_YUV.png
+[image3]: ./output_images/sliding_window_size3_YCrCb.png
+[image4]: ./output_images/sliding_windows_7.jpg
+
+[image5]: ./output_images/heat_map_1.png
+[image5]: ./output_images/heat_map_2.png
+[image5]: ./output_images/heat_map_3.png
+
+[image7]: ./output_images/bounding boxes.png
+[video1]: ./project_video_out.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
