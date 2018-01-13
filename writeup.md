@@ -73,7 +73,7 @@ I tried various combinations of parameters and the best I got is using :
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using using 80% of Data for training, and 20% for testing after normalizing and randomizing data, I only used the (vehicles)[https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/vehicles.zip] and (non-vehicles)[https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/non-vehicles.zip] datasets. I used Hog-features to train the classifier. I tried some experiments till at the end I used the best as a matter of testing accuracy. Here are the experiments I did: 
+I trained a linear SVM using using 80% of Data for training, and 20% for testing after normalizing and randomizing data, I only used the [vehicles](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/vehicles.zip) and [non-vehicles](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/non-vehicles.zip) datasets. I used Hog-features to train the classifier. I tried some experiments till at the end I used the best as a matter of testing accuracy. Here are the experiments I did: 
 | Experiment no.        		| Parameters      					| Testing accuracy                    | Time to train SVM|
 |:---------------------:|:--------------------------------------------------------------------------:| 
 | 1        		| Cspace='RGB', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.965  | 23.49sec |
