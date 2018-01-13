@@ -63,7 +63,9 @@ Here is an example using the `RGB` color space and HOG parameters of `orient = 9
 
 
 ![alt text][image2]
+
 ![alt text][image3]
+
 ![alt text][image4]
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
@@ -77,14 +79,16 @@ I trained a linear SVM using using 80% of Data for training, and 20% for testing
 
 
 
-| Experiment no.        		| Parameters      					| Testing accuracy                    | Time to train SVM|
+| Experiment no. | Parameters      					| Testing accuracy                    | Time to train SVM|
 |:-------------------------:|:-------------------------:|:------------------------------------:|:-------------:| 
 | 1        		| Cspace='RGB', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.965  | 23.49sec |
 | 2          | Cspace='HLS', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.9834  | 21.96sec  |
 | 3            |Cspace='YUV', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.98  | 19.39sec    |
 | 4           |Cspace='YCrCb', orient=9, pix_per_cell=8, cell_per_block=2, hog_channel='ALL'| 0.979 | 16.49sec   	|
 |						|										                                                         		|       |            |
-|						|											                                                        	|       |            |
+|						|    |       |            |
+
+
 The code for this step is contained in the 13th In-cells in the  IPython notebook 'Vehicle_Detection.ipynb' (or in lines #344 through #401 of the file called `Vehicle_Detection.py`).  
 
 I then final run was the one I chose to train the classifier, as will be discused in the sliding winsow section, experiments showed the using 'YCrCB' is the best for Hog-features extraction and best features I got for prediction.
