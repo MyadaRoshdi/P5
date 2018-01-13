@@ -20,20 +20,20 @@ The goals / steps of this project are the following:
 [image3]: ./output_images/hog_exploration_1.png
 [image4]: ./output_images/hog_exploration_2.png
 
-[image3]: ./output_images/region_of_interest.png
-[image3]: ./output_images/sliding_window_size1.png
-[image3]: ./output_images/sliding_window_size2.png
-[image3]: ./output_images/sliding_window_size3.png
-[image3]: ./output_images/sliding_window_size_RGB.png
-[image3]: ./output_images/sliding_window_size3_YUV.png
-[image3]: ./output_images/sliding_window_size3_YCrCb.png
-[image4]: ./output_images/sliding_windows_7.jpg
+[image5]: ./output_images/region_of_interest.png
+[image6]: ./output_images/sliding_window_size1.png
+[image7]: ./output_images/sliding_window_size2.png
+[image8]: ./output_images/sliding_window_size3.png
+[image9]: ./output_images/sliding_window_size_RGB.png
+[image10]: ./output_images/sliding_window_size3_YUV.png
+[image11]: ./output_images/sliding_window_size3_YCrCb.png
+[image12]: ./output_images/sliding_windows_7.jpg
 
-[image5]: ./output_images/heat_map_1.png
-[image5]: ./output_images/heat_map_2.png
-[image5]: ./output_images/heat_map_3.png
+[image13]: ./output_images/heat_map_1.png
+[image14]: ./output_images/heat_map_2.png
+[image15]: ./output_images/heat_map_3.png
 
-[image7]: ./output_images/bounding boxes.png
+[image16]: ./output_images/bounding boxes.png
 [video1]: ./project_video_out.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
@@ -42,7 +42,7 @@ The goals / steps of this project are the following:
 ---
 ### Writeup / README
 
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.    
 
 You're reading it!
 
